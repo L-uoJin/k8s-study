@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: env-cm
+  namespace: jike
+data:
+  VERSION: "GO SDK IS 1.17"

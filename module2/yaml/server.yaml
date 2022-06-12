@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpserver
+  namespace: jike
+  labels:
+    app: httpserver
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
+  minReadySeconds: 15
+  selector:
+    matchLabels:
+      app: httpserver
+  template:
+    metadata:
+      labels:
+        app: httpserver
+    spec:
+      containers:
+        - name: httpserver
+          image: httpserver:v1.1.0
+          ports:
+            -containerPort : 12345
+          envFrom:
+            - configMapRef:
+                name: env-cm
+          volumeMounts:
+            - name: config-volume
+              mountPath: /module2/conf.ini
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 500m
+              memory: 512Mi
+          # 优雅启动
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 12345
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          # 探活
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 12345
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            successThreshold: 2
+      volumes:
+        - name: config-volume
+          configMap:
+            name: conf-cm

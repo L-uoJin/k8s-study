@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: conf-cm
+  namespace: jike
+data:
+  conf.ini: |-     #配置文件的名字和内容，|- 是固定格式，不能省略
+        port :":12345";
+        loglevel :"info";

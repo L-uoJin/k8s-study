@@ -1,0 +1,15 @@
+FROM golang:1.17.2-alpine AS build
+ENV GO111MODULE=on \
+    CGO_ENABLED=0 \
+    GOOS=linux \
+    GOARCH=amd64 \
+    GOPROXY="https://goproxy.io"
+WORKDIR /module2
+COPY . .
+RUN go build -o server .
+
+FROM alpine
+COPY --from=build /module2/server /
+COPY --from=build /module2/config/conf.ini /module2/conf.ini
+EXPOSE 12345
+CMD ["/server"]
