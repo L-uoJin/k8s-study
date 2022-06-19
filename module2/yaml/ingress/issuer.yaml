@@ -1,0 +1,17 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  namespace: jike
+  generation: 1
+  name: letsencrypt-prod
+spec:
+  acme:
+    email: 645853794@qq.com
+    preferredChain:  ""
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    server: https://acme-v02.api.letsencrypt.org/directory
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
