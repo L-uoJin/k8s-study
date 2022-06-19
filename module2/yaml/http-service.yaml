@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: jike
+  labels:
+    app: httpserver
+  name: httpsvc
+spec:
+  ports:
+    - port:  80
+      protocol:  TCP
+      targetPort:  12345
+  selector:
+    app: httpserver
+  type: ClusterIP
