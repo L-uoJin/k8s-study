@@ -4,6 +4,7 @@ import (
 	"context"
 	log "github.com/sirupsen/logrus"
 	"module2/config"
+	"module2/controller/metrics"
 	"module2/router"
 	"net/http"
 	"os"
@@ -13,6 +14,7 @@ import (
 func main() {
 	root := http.NewServeMux()
 	router.InitRouter(root)
+	metrics.Register()
 	server := &http.Server{
 		Addr:    config.Port,
 		Handler: root,
