@@ -3,10 +3,13 @@ package controller
 import (
 	"fmt"
 	log "github.com/sirupsen/logrus"
+	"math/rand"
+	"module2/controller/metrics"
 	"module2/util"
 	"net"
 	"net/http"
 	"os"
+	"time"
 )
 
 func Healthz(w http.ResponseWriter,r *http.Request)  {
@@ -31,3 +34,15 @@ func Healthz(w http.ResponseWriter,r *http.Request)  {
 		"clientIp":ip}))
 }
 
+func Rand(w http.ResponseWriter,r *http.Request)  {
+	timer := metrics.NewTimer()
+	defer timer.ObserveTotal()
+	delay := randInt(10, 2000)
+	time.Sleep(time.Millisecond*time.Duration(delay))
+	w.WriteHeader(http.StatusOK)
+	w.Write(util.WithMsg("sucess",http.StatusOK, nil))
+}
+func randInt(min, max int) int {
+	rand.Seed(time.Now().Unix())
+	return rand.Intn(max-min) + min
+}
